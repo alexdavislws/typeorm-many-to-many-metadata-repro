@@ -106,6 +106,11 @@ const run = async () => {
   // When referencing by table name this outputs the correct column metadata for propertyName (is not a junction table)
   // [ 'id', 'testColumn' ]
   console.log(con.getRepository('parent_one').metadata.columns.map((c) => c.propertyName));
+
+  // My workaround - this works for what I need to output the correct entity metadata.
+  // [ 'id', 'parentOneId', 'parentTwoId' ]
+  const metadata = con.entityMetadatas.find((e) => e.tableName === 'parent_one_has_parent_twos');
+  console.log(metadata?.columns.map((c) => c.propertyName));
 };
 
 run();
