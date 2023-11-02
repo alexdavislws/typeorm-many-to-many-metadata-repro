@@ -94,23 +94,19 @@ const run = async () => {
 
   await con.initialize();
 
+  // Using TypeORM 0.3.10
+
   // This outputs the correct column metadata for propertyName
   // [ 'id', 'parentOneId', 'parentTwoId' ]
   console.log(con.getRepository(ParentOneHasParentTwos).metadata.columns.map((c) => c.propertyName));
 
-  // When referencing by table name, this does not output the correct column metadata for propertyName.
-  // This is the use case I have that needs to work. It used to work in TypeORM 0.2.x
-  // [ 'parent_two_id', 'parent_one_id' ]
+  // When referencing by junction table name, this works now.
+  // [ 'id', 'parentOneId', 'parentTwoId' ]
   console.log(con.getRepository('parent_one_has_parent_twos').metadata.columns.map((c) => c.propertyName));
 
   // When referencing by table name this outputs the correct column metadata for propertyName (is not a junction table)
   // [ 'id', 'testColumn' ]
   console.log(con.getRepository('parent_one').metadata.columns.map((c) => c.propertyName));
-
-  // My workaround - this works for what I need to output the correct entity metadata.
-  // [ 'id', 'parentOneId', 'parentTwoId' ]
-  const metadata = con.entityMetadatas.find((e) => e.tableName === 'parent_one_has_parent_twos');
-  console.log(metadata?.columns.map((c) => c.propertyName));
 };
 
 run();
